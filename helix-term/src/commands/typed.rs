@@ -982,6 +982,29 @@ fn reload(
     })
 }
 
+/// Reload all the open [`Documents`] from their repective source files.
+fn reload_all(
+    cx: &mut compositor::Context,
+    _args: &[Cow<str>],
+    event: PromptEvent,
+) -> anyhow::Result<()> {
+    if event != PromptEvent::Validate {
+        return Ok(());
+    }
+
+    let scrolloff = cx.editor.config().scrolloff;
+
+    for doc in cx.editor.documents_mut() {
+        if let Some(view_id) = doc.selections().keys().next() {
+            doc.reload(*view_id);
+        }
+    }
+
+    let (current_view, current_doc) = current!(cx.editor);
+    current_view.ensure_cursor_in_view(current_doc, scrolloff);
+    Ok(())
+}
+
 fn tree_sitter_scopes(
     cx: &mut compositor::Context,
     _args: &[Cow<str>],
@@ -1825,6 +1848,13 @@ pub const TYPABLE_COMMAND_LIST: &[TypableCommand] = &[
             aliases: &[],
             doc: "Discard changes and reload from the source file.",
             fun: reload,
+            completer: None,
+        },
+        TypableCommand {
+            name: "reload_all",
+            aliases: &[],
+            doc: "Reloads all open documents",
+            fun: reload_all,
             completer: None,
         },
         TypableCommand {
