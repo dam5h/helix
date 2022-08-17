@@ -684,6 +684,7 @@ pub enum Action {
     Replace,
     HorizontalSplit,
     VerticalSplit,
+    Other,
 }
 
 impl Editor {
@@ -985,6 +986,10 @@ impl Editor {
                 // initialize selection for view
                 let doc = doc_mut!(self, &id);
                 doc.ensure_view_init(view_id);
+            }
+            Action::Other => {
+                self.focus_next();
+                self.switch(id, Action::Replace);
             }
         }
 

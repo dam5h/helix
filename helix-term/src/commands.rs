@@ -292,7 +292,6 @@ impl MappableCommand {
         goto_file_hsplit, "Goto files in selection (hsplit)",
         goto_file_vsplit, "Goto files in selection (vsplit)",
         goto_reference, "Goto references",
-        goto_reference_other_window, "Goto references other window",
         goto_window_top, "Goto window top",
         goto_window_center, "Goto window center",
         goto_window_bottom, "Goto window bottom",

@@ -799,14 +799,6 @@ pub fn goto_implementation(cx: &mut Context) {
 }
 
 pub fn goto_reference(cx: &mut Context) {
-    goto_reference_impl(cx, false)
-}
-
-pub fn goto_reference_other_window(cx: &mut Context) {
-    goto_reference_impl(cx, true)
-}
-
-fn goto_reference_impl(cx: &mut Context, rotate: bool) {
     let (view, doc) = current!(cx.editor);
     let language_server = language_server!(cx.editor, doc);
     let offset_encoding = language_server.offset_encoding();
@@ -819,9 +811,6 @@ fn goto_reference_impl(cx: &mut Context, rotate: bool) {
         future,
         move |editor, compositor, response: Option<Vec<lsp::Location>>| {
             let items = response.unwrap_or_default();
-            if rotate && !items.is_empty() {
-                editor.focus_next();
-            }
             goto_impl(editor, compositor, items, offset_encoding);
         },
     );
